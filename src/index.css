@@ -1,0 +1,19 @@
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+section {
+    /* max-width: 100% !important; */
+}
+
+main {
+    flex: 1;
+    /* height: 100%; */
+}
