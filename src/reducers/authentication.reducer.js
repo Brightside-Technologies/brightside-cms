@@ -1,6 +1,5 @@
 const initialState = {
-    username: "",
-    name: "",
+    loggedInUser: {},
     isAuthenticated: false
 };
 
@@ -9,8 +8,13 @@ export default function authentication(state = initialState, action) {
         case "LOGIN_SUCCESS":
             return {
                 ...state,
-                username: action.response.Username,
-                name: action.response.Name,
+                loggedInUser: action.loggedInUser,
+                isAuthenticated: true
+            };
+        case "LOGIN_WITH_GOOGLE_SUCCESS":
+            return {
+                ...state,
+                loggedInUser: action.loggedInUser,
                 isAuthenticated: true
             };
         case "LOGIN_LOADING":

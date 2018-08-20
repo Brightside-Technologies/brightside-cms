@@ -9,7 +9,7 @@ function MainLayout() {
     return (
         <Fragment>
             <Navbar />
-            <main className={`${cssHelpers["mt-5"]}`}>
+            <main className={`${cssHelpers["mt-5"]} ${cssHelpers["pt-5"]}`}>
                 <Switch>
                     <Route path="/private/home" component={Home} />
                     <Redirect from="/private" to="/private/home" />
