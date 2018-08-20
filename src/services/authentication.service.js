@@ -10,10 +10,7 @@ function login(username, password) {
 }
 
 function logout() {
-    /**
-     *  Just resolve a promise here to simulate a logout request
-     * */
-    return new Promise(resolve => resolve(true));
+    return authRef().signOut();
 }
 
 function loginWithGoogle() {
