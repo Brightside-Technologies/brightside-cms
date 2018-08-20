@@ -9,6 +9,16 @@ const LOGOUT_SUCCESS = () => ({
     type: "LOGOUT_SUCCESS"
 });
 
+const LOGIN_WITH_GOOGLE_SUCCESS = user => ({
+    type: "LOGIN_WITH_GOOGLE_SUCCESS",
+    user
+});
+
+const LOGIN_WITH_GOOGLE_ERROR = response => ({
+    type: "LOGIN_WITH_GOOGLE_ERROR",
+    response
+});
+
 export function login(username, password) {
     return dispatch =>
         /** TODO: dispatch global loading event */
@@ -34,5 +44,19 @@ export function logout() {
             .catch(error => {
                 /** TODO: dispatch some kind of global error handler here */
                 throw new Error("LOGOUT_ERROR");
+            });
+}
+
+export function loginWithGoogle() {
+    return dispatch =>
+        /** TODO: dispatch global loading event */
+        AuthenticationService.loginWithGoogle()
+            .then(response => {
+                dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response));
+                /** TODO: turn off global loading event */
+            })
+            .catch(error => {
+                /** TODO: dispatch some kind of global error handler here */
+                throw new Error("LOGIN_WITH_GOOGLE_ERROR");
             });
 }

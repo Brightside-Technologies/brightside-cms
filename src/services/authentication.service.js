@@ -1,3 +1,5 @@
+import {authRef} from "../firebase";
+
 function login(username, password) {
     /**
      *  Just resolve a promise here to simulate a login request
@@ -14,9 +16,22 @@ function logout() {
     return new Promise(resolve => resolve(true));
 }
 
+function loginWithGoogle() {
+    const provider = new authRef.GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+
+    return authRef()
+        .signInWithPopup(provider)
+        .then(response => {
+            console.log("RESPONSE", response);
+        });
+}
+
 const AuthenticationService = {
     login,
-    logout
+    logout,
+    loginWithGoogle
 };
 
 export default AuthenticationService;

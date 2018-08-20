@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Form, Grid, Header, Message, Segment} from "semantic-ui-react";
+import {Icon, Button, Form, Grid, Header, Divider, Segment} from "semantic-ui-react";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import {withRouter} from "react-router";
@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 
 import cssHelpers from "../../helpers.module.css";
 
-import {login} from "../../actions/authentication.actions";
+import {login, loginWithGoogle} from "../../actions/authentication.actions";
 
 export class Login extends React.Component {
     constructor(props) {
@@ -22,6 +22,17 @@ export class Login extends React.Component {
     handleLogin = (username, password) => {
         const {history, loginAction} = this.props;
         loginAction(username, password)
+            .then(() => {
+                history.push("/private/home");
+            })
+            .catch(error => {
+                console.log("LOGIN_ERROR", error);
+            });
+    };
+
+    handleLoginWithGoogle = () => {
+        const {history, loginWithGoogleAction} = this.props;
+        loginWithGoogleAction()
             .then(() => {
                 history.push("/private/home");
             })
@@ -45,7 +56,7 @@ export class Login extends React.Component {
                             Log-in to your account
                         </Header>
                         <Form size="large">
-                            <Segment stacked>
+                            <Segment raised>
                                 <Form.Input
                                     fluid
                                     icon="user"
@@ -59,7 +70,6 @@ export class Login extends React.Component {
                                     placeholder="Password"
                                     type="password"
                                 />
-
                                 <Button
                                     onClick={() => {
                                         this.handleLogin(username, password);
@@ -71,10 +81,15 @@ export class Login extends React.Component {
                                 </Button>
                             </Segment>
                         </Form>
-                        <Message>
-                            New to us?
-                            <a href="#">Sign Up</a>
-                        </Message>
+                        <Segment raised>
+                            <Divider horizontal>OR LOG IN WITH</Divider>
+                            <Button color="facebook">
+                                <Icon name="facebook" /> Facebook
+                            </Button>
+                            <Button onClick={this.handleLoginWithGoogle} color="google plus">
+                                <Icon name="google plus" /> Google Plus
+                            </Button>
+                        </Segment>
                     </Grid.Column>
                 </Grid>
             </div>
@@ -88,7 +103,8 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    loginAction: () => dispatch(login())
+    loginAction: () => dispatch(login()),
+    loginWithGoogleAction: () => dispatch(loginWithGoogle())
 });
 
 export default withRouter(
