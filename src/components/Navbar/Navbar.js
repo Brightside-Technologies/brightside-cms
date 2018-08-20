@@ -29,6 +29,13 @@ class Navbar extends React.Component {
 
     render() {
         const {activeItem} = this.state;
+        const {loggedInUser} = this.props;
+        const avatar = (
+            <div>
+                <Image src={loggedInUser.profile.picture} avatar />
+                <span>{loggedInUser.profile.name}</span>
+            </div>
+        );
         return (
             <Menu fixed="top" inverted>
                 <Menu.Item as="a" header>
@@ -56,11 +63,11 @@ class Navbar extends React.Component {
                     </Dropdown.Menu>
                 </Dropdown>
                 <Menu.Menu position="right">
-                    <Menu.Item
-                        name="logout"
-                        active={activeItem === "logout"}
-                        onClick={this.handleLogout}
-                    />
+                    <Dropdown button item trigger={avatar}>
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={this.handleLogout}>Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
                 </Menu.Menu>
             </Menu>
         );
@@ -68,9 +75,18 @@ class Navbar extends React.Component {
 }
 
 Navbar.propTypes = {
+    loggedInUser: PropTypes.shape({
+        isNewUser: PropTypes.bool,
+        profile: PropTypes.object,
+        providerId: PropTypes.string
+    }).isRequired,
     logoutAction: PropTypes.func.isRequired,
     history: ReactRouterPropTypes.history.isRequired
 };
+
+const mapStateToProps = state => ({
+    loggedInUser: state.authenticationReducer.loggedInUser
+});
 
 const mapDispatchToProps = dispatch => ({
     logoutAction: () => dispatch(logout())
@@ -78,7 +94,7 @@ const mapDispatchToProps = dispatch => ({
 
 export default withRouter(
     connect(
-        null,
+        mapStateToProps,
         mapDispatchToProps
     )(Navbar)
 );

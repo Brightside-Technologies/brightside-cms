@@ -1,17 +1,17 @@
 import AuthenticationService from "../services/authentication.service";
 
-const LOGIN_SUCCESS = response => ({
+const LOGIN_SUCCESS = loggedInUser => ({
     type: "LOGIN_SUCCESS",
-    response
+    loggedInUser
 });
 
 const LOGOUT_SUCCESS = () => ({
     type: "LOGOUT_SUCCESS"
 });
 
-const LOGIN_WITH_GOOGLE_SUCCESS = user => ({
+const LOGIN_WITH_GOOGLE_SUCCESS = loggedInUser => ({
     type: "LOGIN_WITH_GOOGLE_SUCCESS",
-    user
+    loggedInUser
 });
 
 const LOGIN_WITH_GOOGLE_ERROR = response => ({
@@ -52,7 +52,7 @@ export function loginWithGoogle() {
         /** TODO: dispatch global loading event */
         AuthenticationService.loginWithGoogle()
             .then(response => {
-                dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response));
+                dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response.additionalUserInfo));
                 /** TODO: turn off global loading event */
             })
             .catch(error => {

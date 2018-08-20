@@ -25,6 +25,7 @@ function loginWithGoogle() {
         .signInWithPopup(provider)
         .then(response => {
             console.log("RESPONSE", response);
+            return response;
         });
 }
 
