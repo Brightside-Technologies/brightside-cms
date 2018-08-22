@@ -1,3 +1,5 @@
+import {authRef} from "../firebase";
+
 function login(username, password) {
     /**
      *  Just resolve a promise here to simulate a login request
@@ -8,15 +10,26 @@ function login(username, password) {
 }
 
 function logout() {
-    /**
-     *  Just resolve a promise here to simulate a logout request
-     * */
-    return new Promise(resolve => resolve(true));
+    return authRef().signOut();
+}
+
+function loginWithGoogle() {
+    const provider = new authRef.GoogleAuthProvider();
+    provider.addScope("profile");
+    provider.addScope("email");
+
+    return authRef()
+        .signInWithPopup(provider)
+        .then(response => {
+            console.log("RESPONSE", response);
+            return response;
+        });
 }
 
 const AuthenticationService = {
     login,
-    logout
+    logout,
+    loginWithGoogle
 };
 
 export default AuthenticationService;
