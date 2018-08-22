@@ -28,6 +28,7 @@ class Navbar extends React.Component {
     };
 
     render() {
+        console.log("PROPS", this.props);
         const {activeItem} = this.state;
         const {loggedInUser} = this.props;
         const avatar = (
