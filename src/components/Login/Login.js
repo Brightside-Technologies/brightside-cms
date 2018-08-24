@@ -14,16 +14,19 @@ export class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: "jdoe@email.com",
-            password: "Pass123"
+            username: "client@mail.com",
+            password: "Client1234"
         };
     }
 
     handleLogin = (username, password) => {
-        const {history, loginAction} = this.props;
+        const {history, loginAction, getUserByUidAction} = this.props;
         loginAction(username, password)
-            .then(() => {
-                history.push("/private/home");
+            .then(response => {
+                return getUserByUidAction(response.user.uid);
+            })
+            .then(response => {
+                history.push(`/${response.Role.toLowerCase()}/home`);
             })
             .catch(error => {
                 console.log("LOGIN_ERROR", error);
@@ -34,9 +37,10 @@ export class Login extends React.Component {
         const {history, loginWithGoogleAction, getUserByUidAction} = this.props;
         loginWithGoogleAction()
             .then(response => {
-                console.log("LOGINRESPONSE", response);
-                getUserByUidAction(response.user.uid);
-                history.push("/private/home");
+                return getUserByUidAction(response.user.uid);
+            })
+            .then(response => {
+                history.push(`/${response.Role.toLowerCase()}/home`);
             })
             .catch(error => {
                 console.log("LOGIN_ERROR", error);
@@ -105,7 +109,7 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    loginAction: () => dispatch(login()),
+    loginAction: (username, password) => dispatch(login(username, password)),
     loginWithGoogleAction: () => dispatch(loginWithGoogle()),
     getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
 });

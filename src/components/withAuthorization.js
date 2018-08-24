@@ -13,8 +13,8 @@ const withAuthorization = authCondition => WrappedComponent => {
         }
 
         componentDidMount() {
-            const {loggedInUser} = this.props;
-            if (!authCondition(loggedInUser)) {
+            const {user} = this.props;
+            if (!authCondition(user)) {
                 this.setState({isAuthorized: false});
                 console.log("UNAUTHORIZED");
             } else {
@@ -32,7 +32,7 @@ const withAuthorization = authCondition => WrappedComponent => {
     }
 
     const mapStateToProps = state => ({
-        user: state.authenticationReducer.loggedInUser
+        user: state.usersReducer.user
     });
 
     return connect(mapStateToProps)(AuthorizationComponent);

@@ -10,6 +10,7 @@ export function getUserByUid(userUid) {
         UsersService.getByUid(userUid)
             .then(response => {
                 dispatch(GET_USER_BY_UID_SUCCESS(response));
+                return response;
             })
             .catch(error => {
                 /** TODO: dispatch some kind of global error handler here */

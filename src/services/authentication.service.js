@@ -1,12 +1,16 @@
 import {authRef} from "../firebase";
 
 function login(username, password) {
-    /**
-     *  Just resolve a promise here to simulate a login request
-     *  Assume response from login request contains user's name to
-     *  display on navbar
-     * */
-    return new Promise(resolve => resolve({Username: username, Name: "Jane Doe"}));
+    console.log("USERNAME", username);
+    return authRef()
+        .signInWithEmailAndPassword(username, password)
+        .then(response => {
+            console.log("LOGIN", response);
+            return response;
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 function logout() {
