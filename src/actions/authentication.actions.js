@@ -26,6 +26,7 @@ export function login(username, password) {
             .then(response => {
                 dispatch(LOGIN_SUCCESS(response));
                 /** TODO: turn off global loading event */
+                return response;
             })
             .catch(error => {
                 /** TODO: dispatch some kind of global error handler here */
@@ -52,7 +53,8 @@ export function loginWithGoogle() {
         /** TODO: dispatch global loading event */
         AuthenticationService.loginWithGoogle()
             .then(response => {
-                dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response.additionalUserInfo));
+                dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response));
+                return response;
                 /** TODO: turn off global loading event */
             })
             .catch(error => {
