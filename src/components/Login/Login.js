@@ -8,7 +8,7 @@ import {connect} from "react-redux";
 import cssHelpers from "../../helpers.module.css";
 
 import {login, loginWithGoogle} from "../../actions/authentication.actions";
-
+import {getUserByUid} from "../../actions/users.actions";
 export class Login extends React.Component {
     constructor(props) {
         super(props);
@@ -31,9 +31,11 @@ export class Login extends React.Component {
     };
 
     handleLoginWithGoogle = () => {
-        const {history, loginWithGoogleAction} = this.props;
+        const {history, loginWithGoogleAction, getUserByUidAction} = this.props;
         loginWithGoogleAction()
-            .then(() => {
+            .then(response => {
+                console.log("LOGINRESPONSE", response);
+                getUserByUidAction(response.user.uid);
                 history.push("/private/home");
             })
             .catch(error => {
@@ -104,7 +106,8 @@ Login.propTypes = {
 
 const mapDispatchToProps = dispatch => ({
     loginAction: () => dispatch(login()),
-    loginWithGoogleAction: () => dispatch(loginWithGoogle())
+    loginWithGoogleAction: () => dispatch(loginWithGoogle()),
+    getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
 });
 
 export default withRouter(
