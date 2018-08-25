@@ -14,14 +14,15 @@ export class Login extends React.Component {
         super(props);
 
         this.state = {
-            username: "client@mail.com",
-            password: "Client1234"
+            email: "",
+            password: "",
+            isLoading: false
         };
     }
 
-    handleLogin = (username, password) => {
+    handleLogin = (email, password) => {
         const {history, loginAction, getUserByUidAction} = this.props;
-        loginAction(username, password)
+        loginAction(email, password)
             .then(response => {
                 return getUserByUidAction(response.user.uid);
             })
@@ -47,9 +48,16 @@ export class Login extends React.Component {
             });
     };
 
-    render() {
-        const {username, password} = this.state;
+    handleEmailChange = email => {
+        this.setState({email});
+    };
 
+    handlePasswordChange = password => {
+        this.setState({password});
+    };
+
+    render() {
+        const {email, password, isLoading} = this.state;
         return (
             <div className={`${cssHelpers["h-100"]}`}>
                 <Grid
@@ -64,12 +72,18 @@ export class Login extends React.Component {
                         <Form size="large">
                             <Segment raised>
                                 <Form.Input
+                                    onChange={ev => {
+                                        this.handleEmailChange(ev.target.value);
+                                    }}
                                     fluid
                                     icon="user"
                                     iconPosition="left"
                                     placeholder="E-mail address"
                                 />
                                 <Form.Input
+                                    onChange={ev => {
+                                        this.handlePasswordChange(ev.target.value);
+                                    }}
                                     fluid
                                     icon="lock"
                                     iconPosition="left"
@@ -77,8 +91,10 @@ export class Login extends React.Component {
                                     type="password"
                                 />
                                 <Button
+                                    disabled={!email || !password}
+                                    loading={isLoading}
                                     onClick={() => {
-                                        this.handleLogin(username, password);
+                                        this.handleLogin(email, password);
                                     }}
                                     color="yellow"
                                     fluid
@@ -89,10 +105,13 @@ export class Login extends React.Component {
                         </Form>
                         <Segment raised>
                             <Divider horizontal>OR LOG IN WITH</Divider>
-                            <Button color="facebook">
+                            <Button loading={isLoading} color="facebook">
                                 <Icon name="facebook" /> Facebook
                             </Button>
-                            <Button onClick={this.handleLoginWithGoogle} color="google plus">
+                            <Button
+                                loading={isLoading}
+                                onClick={this.handleLoginWithGoogle}
+                                color="google plus">
                                 <Icon name="google plus" /> Google Plus
                             </Button>
                         </Segment>
@@ -109,7 +128,7 @@ Login.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-    loginAction: (username, password) => dispatch(login(username, password)),
+    loginAction: (email, password) => dispatch(login(email, password)),
     loginWithGoogleAction: () => dispatch(loginWithGoogle()),
     getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
 });
