@@ -13,3 +13,7 @@ export default function users(state = initialState, action) {
             return state;
     }
 }
+
+export function getUserByUid(store) {
+    return store.user;
+}

@@ -6,6 +6,7 @@ import {withRouter} from "react-router";
 import {connect} from "react-redux";
 
 import {logout} from "../../actions/authentication.actions";
+import {getLoggedInUser} from "../../reducers/index.reducer";
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -86,7 +87,7 @@ Navbar.propTypes = {
 };
 
 const mapStateToProps = state => ({
-    loggedInUser: state.authenticationReducer.loggedInUser
+    loggedInUser: getLoggedInUser(state)
 });
 
 const mapDispatchToProps = dispatch => ({
