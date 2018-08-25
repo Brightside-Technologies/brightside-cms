@@ -27,3 +27,7 @@ export default function authentication(state = initialState, action) {
             return state;
     }
 }
+
+export function getLoggedInUser(store) {
+    return store.loggedInUser;
+}
