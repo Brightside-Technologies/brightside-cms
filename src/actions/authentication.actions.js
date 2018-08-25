@@ -26,6 +26,7 @@ export function login(username, password) {
             .then(response => {
                 dispatch(LOGIN_SUCCESS(response));
                 /** TODO: turn off global loading event */
+                console.log("SUCCESS ACTION");
                 return response;
             })
             .catch(error => {
