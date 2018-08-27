@@ -9,14 +9,15 @@ import cssHelpers from "../../helpers.module.css";
 
 import {login, loginWithGoogle} from "../../actions/authentication.actions";
 import {getUserByUid} from "../../actions/users.actions";
+import {getIsLoading} from "../../reducers/index.reducer";
+
 export class Login extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             email: "",
-            password: "",
-            isLoading: false
+            password: ""
         };
     }
 
@@ -57,7 +58,8 @@ export class Login extends React.Component {
     };
 
     render() {
-        const {email, password, isLoading} = this.state;
+        const {email, password} = this.state;
+        const {isLoading} = this.props;
         return (
             <div className={`${cssHelpers["h-100"]}`}>
                 <Grid
@@ -133,9 +135,13 @@ const mapDispatchToProps = dispatch => ({
     getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
 });
 
+const mapStateToProps = state => ({
+    isLoading: getIsLoading(state)
+});
+
 export default withRouter(
     connect(
-        null,
+        mapStateToProps,
         mapDispatchToProps
     )(Login)
 );
