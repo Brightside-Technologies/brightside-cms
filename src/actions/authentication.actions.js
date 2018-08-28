@@ -15,6 +15,11 @@ const LOGIN_WITH_GOOGLE_SUCCESS = loggedInUser => ({
     loggedInUser
 });
 
+const LOGIN_WITH_FACEBOOK_SUCCESS = loggedInUser => ({
+    type: "LOGIN_WITH_FACEBOOK_SUCCESS",
+    loggedInUser
+});
+
 export function login(username, password) {
     return dispatch => {
         dispatch(IS_LOADING(true));
@@ -55,6 +60,23 @@ export function loginWithGoogle() {
             .then(response => {
                 dispatch(IS_LOADING(false));
                 dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response));
+                return response;
+            })
+            .catch(error => {
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
+            });
+    };
+}
+
+export function loginWithFacebook() {
+    return dispatch => {
+        dispatch(IS_LOADING(false));
+        return AuthenticationService.loginWithFacebook()
+            .then(response => {
+                dispatch(IS_LOADING(false));
+                dispatch(LOGIN_WITH_FACEBOOK_SUCCESS(response));
                 return response;
             })
             .catch(error => {

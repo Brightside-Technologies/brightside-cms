@@ -17,6 +17,12 @@ export default function authentication(state = initialState, action) {
                 loggedInUser: action.loggedInUser,
                 isAuthenticated: true
             };
+        case "LOGIN_WITH_FACEBOOK_SUCCESS":
+            return {
+                ...state,
+                loggedInUser: action.loggedInUser,
+                isAuthenticated: true
+            };
         case "LOGIN_LOADING":
             return {
                 ...state,
