@@ -7,7 +7,7 @@ import {connect} from "react-redux";
 
 import cssHelpers from "../../helpers.module.css";
 
-import {login, loginWithGoogle} from "../../actions/authentication.actions";
+import {login, loginWithGoogle, loginWithFacebook} from "../../actions/authentication.actions";
 import {getUserByUid} from "../../actions/users.actions";
 import {getIsLoading} from "../../reducers/index.reducer";
 
@@ -38,6 +38,20 @@ export class Login extends React.Component {
     handleLoginWithGoogle = () => {
         const {history, loginWithGoogleAction, getUserByUidAction} = this.props;
         loginWithGoogleAction()
+            .then(response => {
+                return getUserByUidAction(response.user.uid);
+            })
+            .then(response => {
+                history.push(`/${response.Role.toLowerCase()}/home`);
+            })
+            .catch(error => {
+                console.log("LOGIN_ERROR", error);
+            });
+    };
+
+    handleLoginWithFacebook = () => {
+        const {history, loginWithFacebookAction, getUserByUidAction} = this.props;
+        loginWithFacebookAction()
             .then(response => {
                 return getUserByUidAction(response.user.uid);
             })
@@ -107,7 +121,10 @@ export class Login extends React.Component {
                         </Form>
                         <Segment raised>
                             <Divider horizontal>OR LOG IN WITH</Divider>
-                            <Button loading={isLoading} color="facebook">
+                            <Button
+                                loading={isLoading}
+                                onClick={this.handleLoginWithFacebook}
+                                color="facebook">
                                 <Icon name="facebook" /> Facebook
                             </Button>
                             <Button
@@ -132,6 +149,7 @@ Login.propTypes = {
 const mapDispatchToProps = dispatch => ({
     loginAction: (email, password) => dispatch(login(email, password)),
     loginWithGoogleAction: () => dispatch(loginWithGoogle()),
+    loginWithFacebookAction: () => dispatch(loginWithFacebook()),
     getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
 });
 

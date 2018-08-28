@@ -20,7 +20,19 @@ function loginWithGoogle() {
     return authRef()
         .signInWithPopup(provider)
         .then(response => {
-            console.log("RESPONSE", response);
+            console.log("GOOGLE", response);
+            return response;
+        });
+}
+
+function loginWithFacebook() {
+    const provider = new authRef.FacebookAuthProvider();
+    provider.addScope("email");
+
+    return authRef()
+        .signInWithPopup(provider)
+        .then(response => {
+            console.log("FACEBOOK", response);
             return response;
         });
 }
@@ -28,7 +40,8 @@ function loginWithGoogle() {
 const AuthenticationService = {
     login,
     logout,
-    loginWithGoogle
+    loginWithGoogle,
+    loginWithFacebook
 };
 
 export default AuthenticationService;

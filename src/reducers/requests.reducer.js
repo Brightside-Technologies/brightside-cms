@@ -54,6 +54,9 @@ export function getErrorMessage(store) {
             case "auth/invalid-email":
                 message = "Invalid email format";
                 break;
+            case "auth/account-exists-with-different-credential":
+                message = "Email already exists but is associated with a different provider";
+                break;
             default:
                 message = "An Error occurred";
         }
