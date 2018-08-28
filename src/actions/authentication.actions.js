@@ -1,4 +1,5 @@
 import AuthenticationService from "../services/authentication.service";
+import {IS_LOADING, SET_REQUEST_ERROR} from "../actions/requests.actions";
 
 const LOGIN_SUCCESS = loggedInUser => ({
     type: "LOGIN_SUCCESS",
@@ -14,52 +15,52 @@ const LOGIN_WITH_GOOGLE_SUCCESS = loggedInUser => ({
     loggedInUser
 });
 
-const LOGIN_WITH_GOOGLE_ERROR = response => ({
-    type: "LOGIN_WITH_GOOGLE_ERROR",
-    response
-});
-
 export function login(username, password) {
-    return dispatch =>
-        /** TODO: dispatch global loading event */
-        AuthenticationService.login(username, password)
+    return dispatch => {
+        dispatch(IS_LOADING(true));
+        return AuthenticationService.login(username, password)
             .then(response => {
+                dispatch(IS_LOADING(false));
                 dispatch(LOGIN_SUCCESS(response));
-                /** TODO: turn off global loading event */
-                console.log("SUCCESS ACTION");
                 return response;
             })
             .catch(error => {
-                /** TODO: dispatch some kind of global error handler here */
-                throw new Error("LOGIN_ERROR");
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
             });
+    };
 }
 
 export function logout() {
-    return dispatch =>
-        /** TODO: dispatch global loading event */
-        AuthenticationService.logout()
+    return dispatch => {
+        dispatch(IS_LOADING(true));
+        return AuthenticationService.logout()
             .then(() => {
-                /** TODO: turn off global loading event */
+                dispatch(IS_LOADING(false));
                 dispatch(LOGOUT_SUCCESS());
             })
             .catch(error => {
-                /** TODO: dispatch some kind of global error handler here */
-                throw new Error("LOGOUT_ERROR");
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
             });
+    };
 }
 
 export function loginWithGoogle() {
-    return dispatch =>
-        /** TODO: dispatch global loading event */
-        AuthenticationService.loginWithGoogle()
+    return dispatch => {
+        dispatch(IS_LOADING(false));
+        return AuthenticationService.loginWithGoogle()
             .then(response => {
+                dispatch(IS_LOADING(false));
                 dispatch(LOGIN_WITH_GOOGLE_SUCCESS(response));
                 return response;
-                /** TODO: turn off global loading event */
             })
             .catch(error => {
-                /** TODO: dispatch some kind of global error handler here */
-                throw new Error("LOGIN_WITH_GOOGLE_ERROR");
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
             });
+    };
 }
