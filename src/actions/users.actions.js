@@ -17,3 +17,12 @@ export function getUserByUid(userUid) {
                 throw new Error(error);
             });
 }
+
+export function deleteCurrentUser() {
+    return dispatch =>
+        UsersService._delete()
+            .then(response => {})
+            .catch(error => {
+                throw new Error(error);
+            });
+}

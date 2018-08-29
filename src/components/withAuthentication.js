@@ -19,7 +19,7 @@ export default function withAuthentication(WrappedComponent) {
                     this.setState({isAuthenticated: true});
                 } else {
                     this.setState({isAuthenticated: false});
-                    history.push("/public/login");
+                    history.push("/login");
                 }
             });
         }

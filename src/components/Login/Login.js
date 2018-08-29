@@ -1,5 +1,5 @@
 import React from "react";
-import {Icon, Button, Form, Grid, Header, Divider, Segment} from "semantic-ui-react";
+import {Icon, Button, Form, Grid, Header, Divider, Segment, Message} from "semantic-ui-react";
 import PropTypes from "prop-types";
 import ReactRouterPropTypes from "react-router-prop-types";
 import {withRouter} from "react-router";
@@ -9,6 +9,7 @@ import cssHelpers from "../../helpers.module.css";
 
 import {login, loginWithGoogle, loginWithFacebook} from "../../actions/authentication.actions";
 import {getUserByUid} from "../../actions/users.actions";
+import {deleteCurrentUser} from "../../actions/users.actions";
 import {getIsLoading} from "../../reducers/index.reducer";
 
 export class Login extends React.Component {
@@ -17,7 +18,8 @@ export class Login extends React.Component {
 
         this.state = {
             email: "",
-            password: ""
+            password: "",
+            shouldSignUp: false
         };
     }
 
@@ -36,9 +38,21 @@ export class Login extends React.Component {
     };
 
     handleLoginWithGoogle = () => {
-        const {history, loginWithGoogleAction, getUserByUidAction} = this.props;
+        const {
+            history,
+            loginWithGoogleAction,
+            getUserByUidAction,
+            deleteCurrentUserAction
+        } = this.props;
+
         loginWithGoogleAction()
             .then(response => {
+                if (response.additionalUserInfo.isNewUser) {
+                    return deleteCurrentUserAction().then(() => {
+                        this.setState({shouldSignUp: true});
+                        return Promise.reject("User doesn't exist");
+                    });
+                }
                 return getUserByUidAction(response.user.uid);
             })
             .then(response => {
@@ -50,9 +64,22 @@ export class Login extends React.Component {
     };
 
     handleLoginWithFacebook = () => {
-        const {history, loginWithFacebookAction, getUserByUidAction} = this.props;
+        const {
+            history,
+            loginWithFacebookAction,
+            getUserByUidAction,
+            deleteCurrentUserAction
+        } = this.props;
+
         loginWithFacebookAction()
             .then(response => {
+                console.log("FACEBOOK LOGIN RESPONSE", response);
+                if (response.additionalUserInfo.isNewUser) {
+                    return deleteCurrentUserAction().then(() => {
+                        this.setState({shouldSignUp: true});
+                        return Promise.reject("User doesn't exist");
+                    });
+                }
                 return getUserByUidAction(response.user.uid);
             })
             .then(response => {
@@ -72,7 +99,7 @@ export class Login extends React.Component {
     };
 
     render() {
-        const {email, password} = this.state;
+        const {email, password, shouldSignUp} = this.state;
         const {isLoading} = this.props;
         return (
             <div className={`${cssHelpers["h-100"]}`}>
@@ -133,6 +160,13 @@ export class Login extends React.Component {
                                 color="google plus">
                                 <Icon name="google plus" /> Google Plus
                             </Button>
+                            {shouldSignUp && (
+                                <Message negative>
+                                    Email address not found &nbsp;
+                                    <a href="/signup">Sign up</a>
+                                    &nbsp;instead.
+                                </Message>
+                            )}
                         </Segment>
                     </Grid.Column>
                 </Grid>
@@ -150,7 +184,8 @@ const mapDispatchToProps = dispatch => ({
     loginAction: (email, password) => dispatch(login(email, password)),
     loginWithGoogleAction: () => dispatch(loginWithGoogle()),
     loginWithFacebookAction: () => dispatch(loginWithFacebook()),
-    getUserByUidAction: userUid => dispatch(getUserByUid(userUid))
+    getUserByUidAction: userUid => dispatch(getUserByUid(userUid)),
+    deleteCurrentUserAction: () => dispatch(deleteCurrentUser())
 });
 
 const mapStateToProps = state => ({
