@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 
-import {getUserByUid} from "../reducers/index.reducer";
+import {getLoggedInUser} from "../reducers/index.reducer";
 
 const withAuthorization = authCondition => WrappedComponent => {
     class AuthorizationComponent extends React.Component {
@@ -34,7 +34,7 @@ const withAuthorization = authCondition => WrappedComponent => {
     }
 
     const mapStateToProps = store => ({
-        user: getUserByUid(store)
+        user: getLoggedInUser(store)
     });
 
     return connect(mapStateToProps)(AuthorizationComponent);

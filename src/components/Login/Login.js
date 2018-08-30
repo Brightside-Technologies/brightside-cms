@@ -38,12 +38,7 @@ export class Login extends React.Component {
     };
 
     handleLoginWithGoogle = () => {
-        const {
-            history,
-            loginWithGoogleAction,
-            getUserByUidAction,
-            deleteCurrentUserAction
-        } = this.props;
+        const {history, loginWithGoogleAction, deleteCurrentUserAction} = this.props;
 
         loginWithGoogleAction()
             .then(response => {
@@ -53,9 +48,6 @@ export class Login extends React.Component {
                         return Promise.reject("User doesn't exist");
                     });
                 }
-                return getUserByUidAction(response.user.uid);
-            })
-            .then(response => {
                 history.push(`/${response.Role.toLowerCase()}/home`);
             })
             .catch(error => {
@@ -64,25 +56,16 @@ export class Login extends React.Component {
     };
 
     handleLoginWithFacebook = () => {
-        const {
-            history,
-            loginWithFacebookAction,
-            getUserByUidAction,
-            deleteCurrentUserAction
-        } = this.props;
+        const {history, loginWithFacebookAction, deleteCurrentUserAction} = this.props;
 
         loginWithFacebookAction()
             .then(response => {
-                console.log("FACEBOOK LOGIN RESPONSE", response);
                 if (response.additionalUserInfo.isNewUser) {
                     return deleteCurrentUserAction().then(() => {
                         this.setState({shouldSignUp: true});
                         return Promise.reject("User doesn't exist");
                     });
                 }
-                return getUserByUidAction(response.user.uid);
-            })
-            .then(response => {
                 history.push(`/${response.Role.toLowerCase()}/home`);
             })
             .catch(error => {

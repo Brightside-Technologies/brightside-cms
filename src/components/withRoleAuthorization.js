@@ -4,8 +4,10 @@ import withAuthorization from "./withAuthorization";
 
 const withRoleAuthorization = authorizedRoles => WrappedComponent => {
     return function RoleAuthorization(props) {
-        const isRoleAuthorized = authUser =>
-            !!authUser && authorizedRoles.indexOf(authUser.Role) >= 0;
+        const isRoleAuthorized = authUser => {
+            return !!authUser && authorizedRoles.indexOf(authUser.Role) >= 0;
+        };
+
         const ComponentWithRoleAuthorization = withAuthorization(isRoleAuthorized)(
             WrappedComponent
         );

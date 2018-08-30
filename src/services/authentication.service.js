@@ -1,4 +1,5 @@
 import {authRef} from "../firebase";
+import UsersService from "../services/users.service";
 
 function login(username, password) {
     return authRef()
@@ -21,6 +22,12 @@ function loginWithGoogle() {
         .signInWithPopup(provider)
         .then(response => {
             console.log("GOOGLE", response);
+            return UsersService.getByUid(response.user.uid);
+        })
+        .then(response => {
+            if (!response) {
+                return Promise.reject("System user not found");
+            }
             return response;
         });
 }
@@ -33,6 +40,12 @@ function loginWithFacebook() {
         .signInWithPopup(provider)
         .then(response => {
             console.log("FACEBOOK", response);
+            return UsersService.getByUid(response.user.uid);
+        })
+        .then(response => {
+            if (!response) {
+                return Promise.reject("System user not found");
+            }
             return response;
         });
 }

@@ -2,7 +2,6 @@ import {dbRef} from "../firebase";
 import {authRef} from "../firebase";
 
 function getByUid(userUid) {
-    console.log("userID", userUid);
     return dbRef()
         .collection("users")
         .doc(userUid)

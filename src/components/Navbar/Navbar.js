@@ -31,12 +31,11 @@ class Navbar extends React.Component {
     render() {
         console.log("PROPS", this.props);
         const {activeItem} = this.state;
-        const {profile} = this.props.loggedInUser.additionalUserInfo;
-        const {photoURL} = this.props.loggedInUser.user;
+        const {Name, PhotoURL} = this.props.loggedInUser;
         const avatar = (
             <div>
-                <Image src={photoURL} avatar />
-                <span>{profile && profile.name}</span>
+                <Image src={PhotoURL} avatar />
+                <span>{Name}</span>
             </div>
         );
         return (
@@ -77,6 +76,7 @@ class Navbar extends React.Component {
     }
 }
 
+/** TODO: FIX */
 Navbar.propTypes = {
     loggedInUser: PropTypes.shape({
         isNewUser: PropTypes.bool,

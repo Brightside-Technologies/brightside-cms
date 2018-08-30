@@ -75,6 +75,7 @@ export function loginWithFacebook() {
         dispatch(IS_LOADING(false));
         return AuthenticationService.loginWithFacebook()
             .then(response => {
+                console.log("RESPONSE", response);
                 dispatch(IS_LOADING(false));
                 dispatch(LOGIN_WITH_FACEBOOK_SUCCESS(response));
                 return response;
