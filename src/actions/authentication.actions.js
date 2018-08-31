@@ -30,25 +30,10 @@ export function login(email, password) {
                 return response;
             })
             .catch(error => {
+                console.log("LOGIN ACTION ERROR", error);
                 dispatch(IS_LOADING(false));
                 dispatch(SET_REQUEST_ERROR(error));
-                throw new Error(error);
-            });
-    };
-}
-
-export function logout() {
-    return dispatch => {
-        dispatch(IS_LOADING(true));
-        return AuthenticationService.logout()
-            .then(() => {
-                dispatch(IS_LOADING(false));
-                dispatch(LOGOUT_SUCCESS());
-            })
-            .catch(error => {
-                dispatch(IS_LOADING(false));
-                dispatch(SET_REQUEST_ERROR(error));
-                throw new Error(error);
+                return Promise.reject(error);
             });
     };
 }
@@ -65,7 +50,7 @@ export function loginWithGoogle() {
             .catch(error => {
                 dispatch(IS_LOADING(false));
                 dispatch(SET_REQUEST_ERROR(error));
-                throw new Error(error);
+                return Promise.reject(error);
             });
     };
 }
@@ -83,7 +68,7 @@ export function loginWithFacebook() {
             .catch(error => {
                 dispatch(IS_LOADING(false));
                 dispatch(SET_REQUEST_ERROR(error));
-                throw new Error(error);
+                return Promise.reject(error);
             });
     };
 }
@@ -95,6 +80,22 @@ export function signUpUser(email, password, name) {
             .then(response => {
                 dispatch(IS_LOADING(false));
                 return response;
+            })
+            .catch(error => {
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
+            });
+    };
+}
+
+export function logout() {
+    return dispatch => {
+        dispatch(IS_LOADING(true));
+        return AuthenticationService.logout()
+            .then(() => {
+                dispatch(IS_LOADING(false));
+                dispatch(LOGOUT_SUCCESS());
             })
             .catch(error => {
                 dispatch(IS_LOADING(false));

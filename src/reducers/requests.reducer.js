@@ -57,6 +57,9 @@ export function getErrorMessage(store) {
             case "auth/account-exists-with-different-credential":
                 message = "Email already exists but is associated with a different provider";
                 break;
+            case "auth/user-not-found":
+                message = "User not found";
+                break;
             default:
                 message = "An Error occurred";
         }

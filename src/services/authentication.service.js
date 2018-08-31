@@ -9,6 +9,16 @@ function login(email, password) {
             return UsersService.getByUid(response.user.uid);
         })
         .then(response => {
+            if (!response) {
+                /**
+                 * For some reason auth user exists
+                 * but system user does not. Delete authenticated user and force
+                 * re-signup
+                 * */
+                return UsersService._delete().then(() => {
+                    return Promise.reject({code: "auth/user-not-found", message: "User not found"});
+                });
+            }
             return response;
         });
 }
@@ -28,8 +38,16 @@ function loginWithGoogle() {
             console.log("GOOGLE", response);
             return UsersService.getByUid(response.user.uid).then(user => {
                 if (!user) {
+                    /**
+                     * For some reason auth user exists
+                     * but system user does not. Delete authenticated user and force
+                     * re-signup
+                     * */
                     return UsersService._delete().then(() => {
-                        return Promise.reject(new Error("User does not exist"));
+                        return Promise.reject({
+                            code: "auth/user-not-found",
+                            message: "User not found"
+                        });
                     });
                 }
                 const {isNewUser} = response.additionalUserInfo;
@@ -37,15 +55,15 @@ function loginWithGoogle() {
                 const loggedInUser = Object.assign(user, {isNewUser, photoURL});
                 return loggedInUser;
             });
-        })
-        .then(response => {
-            if (!response) {
-                return UsersService._delete().then(() => {
-                    return Promise.reject(new Error("User does not exist"));
-                });
-            }
-            return response;
         });
+    // .then(response => {
+    //     if (!response) {
+    //         return UsersService._delete().then(() => {
+    //             return Promise.reject(new Error("User does not exist"));
+    //         });
+    //     }
+    //     return response;
+    // });
 }
 
 function loginWithFacebook() {
@@ -58,8 +76,16 @@ function loginWithFacebook() {
             console.log("FACEBOOK", response);
             return UsersService.getByUid(response.user.uid).then(user => {
                 if (!user) {
+                    /**
+                     * For some reason auth user exists
+                     * but system user does not. Delete authenticated user and force
+                     * re-signup
+                     * */
                     return UsersService._delete().then(() => {
-                        return Promise.reject(new Error("User does not exist"));
+                        return Promise.reject({
+                            code: "auth/user-not-found",
+                            message: "User not found"
+                        });
                     });
                 }
                 const {isNewUser} = response.additionalUserInfo;
@@ -67,15 +93,15 @@ function loginWithFacebook() {
                 const loggedInUser = Object.assign(user, {isNewUser, photoURL});
                 return loggedInUser;
             });
-        })
-        .then(response => {
-            if (!response) {
-                return UsersService._delete().then(() => {
-                    return Promise.reject(new Error("User does not exist"));
-                });
-            }
-            return response;
         });
+    // .then(response => {
+    //     if (!response) {
+    //         return UsersService._delete().then(() => {
+    //             return Promise.reject(new Error("User does not exist"));
+    //         });
+    //     }
+    //     return response;
+    // });
 }
 
 function signUpUser(email, password, name) {

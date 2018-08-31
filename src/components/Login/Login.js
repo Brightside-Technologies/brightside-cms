@@ -24,13 +24,16 @@ export class Login extends React.Component {
     }
 
     handleLogin = (email, password) => {
-        const {history, loginAction, getUserByUidAction} = this.props;
+        const {history, loginAction} = this.props;
         loginAction(email, password)
             .then(response => {
                 history.push(`/${response.role.toLowerCase()}/home`);
             })
             .catch(error => {
                 console.log("LOGIN_ERROR", error);
+                if (error.code === "auth/user-not-found") {
+                    this.setState({shouldSignUp: true});
+                }
             });
     };
 
@@ -172,7 +175,6 @@ const mapDispatchToProps = dispatch => ({
     loginAction: (email, password) => dispatch(login(email, password)),
     loginWithGoogleAction: () => dispatch(loginWithGoogle()),
     loginWithFacebookAction: () => dispatch(loginWithFacebook()),
-    getUserByUidAction: userUid => dispatch(getUserByUid(userUid)),
     deleteCurrentUserAction: () => dispatch(deleteCurrentUser())
 });
 
