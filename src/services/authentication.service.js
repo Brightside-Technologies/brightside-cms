@@ -26,7 +26,17 @@ function loginWithGoogle() {
         .signInWithPopup(provider)
         .then(response => {
             console.log("GOOGLE", response);
-            return UsersService.getByUid(response.user.uid);
+            return UsersService.getByUid(response.user.uid).then(user => {
+                if (!user) {
+                    return UsersService._delete().then(() => {
+                        return Promise.reject(new Error("User does not exist"));
+                    });
+                }
+                const {isNewUser} = response.additionalUserInfo;
+                const {photoURL} = response.user;
+                const loggedInUser = Object.assign(user, {isNewUser, photoURL});
+                return loggedInUser;
+            });
         })
         .then(response => {
             if (!response) {
@@ -46,8 +56,6 @@ function loginWithFacebook() {
         .signInWithPopup(provider)
         .then(response => {
             console.log("FACEBOOK", response);
-
-            /** TODO: temp. this should go in signUp?? */
             return UsersService.getByUid(response.user.uid).then(user => {
                 if (!user) {
                     return UsersService._delete().then(() => {
