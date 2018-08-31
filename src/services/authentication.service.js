@@ -5,6 +5,10 @@ function login(email, password) {
     return authRef()
         .signInWithEmailAndPassword(email, password)
         .then(response => {
+            console.log("LOGIN WITH PASS", response);
+            return UsersService.getByUid(response.user.uid);
+        })
+        .then(response => {
             return response;
         });
 }
@@ -26,9 +30,10 @@ function loginWithGoogle() {
         })
         .then(response => {
             if (!response) {
-                return Promise.reject("System user not found");
+                return UsersService._delete().then(() => {
+                    return Promise.reject(new Error("User does not exist"));
+                });
             }
-            console.log("currentUser", authRef().currentUser);
             return response;
         });
 }
@@ -40,8 +45,15 @@ function loginWithFacebook() {
     return authRef()
         .signInWithPopup(provider)
         .then(response => {
+            console.log("FACEBOOK", response);
+
             /** TODO: temp. this should go in signUp?? */
             return UsersService.getByUid(response.user.uid).then(user => {
+                if (!user) {
+                    return UsersService._delete().then(() => {
+                        return Promise.reject(new Error("User does not exist"));
+                    });
+                }
                 const {isNewUser} = response.additionalUserInfo;
                 const {photoURL} = response.user;
                 const loggedInUser = Object.assign(user, {isNewUser, photoURL});
@@ -50,24 +62,31 @@ function loginWithFacebook() {
         })
         .then(response => {
             if (!response) {
-                return Promise.reject("System user not found");
+                return UsersService._delete().then(() => {
+                    return Promise.reject(new Error("User does not exist"));
+                });
             }
             return response;
         });
 }
 
-function signUpUser(newUser) {
-    const {email, password} = newUser;
+function signUpUser(email, password, name) {
+    let newUser = {
+        email,
+        name,
+        role: "subscriber",
+        photoURL: ""
+    };
     return authRef()
         .createUserWithEmailAndPassword(email, password)
         .then(response => {
             console.log("USER SIGNED UP", response);
-
-            /** TODO: userDTO has role: subscriber,  name, email, photoUrl: avatar or whatever they used to sign up with */
-            // newUser.role = "subscriber";
-            // newUser.photoUrl = newUser.photoUrl || gravatar
-            // return UsersService.create(newUser);
-            return response;
+            newUser.id = response.user.uid;
+            console.log("USER", newUser);
+            return UsersService.create(newUser);
+        })
+        .then(response => {
+            console.log("NEW USER", response);
         });
 }
 

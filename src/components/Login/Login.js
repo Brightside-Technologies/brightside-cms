@@ -27,10 +27,7 @@ export class Login extends React.Component {
         const {history, loginAction, getUserByUidAction} = this.props;
         loginAction(email, password)
             .then(response => {
-                return getUserByUidAction(response.user.uid);
-            })
-            .then(response => {
-                history.push(`/${response.Role.toLowerCase()}/home`);
+                history.push(`/${response.role.toLowerCase()}/home`);
             })
             .catch(error => {
                 console.log("LOGIN_ERROR", error);
@@ -42,16 +39,20 @@ export class Login extends React.Component {
 
         loginWithGoogleAction()
             .then(response => {
-                if (response.additionalUserInfo.isNewUser) {
+                console.log("GOOGLE LOGN", response);
+                if (response.isNewUser) {
                     return deleteCurrentUserAction().then(() => {
                         this.setState({shouldSignUp: true});
-                        return Promise.reject("User doesn't exist");
+                        return Promise.reject(new Error("User does not exist"));
                     });
                 }
-                history.push(`/${response.Role.toLowerCase()}/home`);
+                history.push(`/${response.role.toLowerCase()}/home`);
             })
             .catch(error => {
-                console.log("LOGIN_ERROR", error);
+                console.log("GOOGLE_LOGIN_ERROR", error);
+                if (error.message.indexOf("User does not exist") > 0) {
+                    this.setState({shouldSignUp: true});
+                }
             });
     };
 
@@ -67,10 +68,13 @@ export class Login extends React.Component {
                         return Promise.reject("User doesn't exist");
                     });
                 }
-                history.push(`/${response.Role.toLowerCase()}/home`);
+                history.push(`/${response.role.toLowerCase()}/home`);
             })
             .catch(error => {
-                console.log("LOGIN_ERROR", error);
+                console.log("FACEBOOK_LOGIN_ERROR", error);
+                if (error.message.indexOf("User does not exist") > 0) {
+                    this.setState({shouldSignUp: true});
+                }
             });
     };
 

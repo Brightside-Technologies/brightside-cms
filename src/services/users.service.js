@@ -16,9 +16,16 @@ function _delete() {
 }
 
 function create(newUser) {
+    const {id, email, name, role, photoURL} = newUser;
     return dbRef()
         .collection("users")
-        .set(newUser);
+        .doc(id)
+        .set({
+            email,
+            name,
+            role,
+            photoURL
+        });
 }
 
 const UsersService = {

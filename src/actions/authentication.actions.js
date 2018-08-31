@@ -20,10 +20,10 @@ const LOGIN_WITH_FACEBOOK_SUCCESS = loggedInUser => ({
     loggedInUser
 });
 
-export function login(username, password) {
+export function login(email, password) {
     return dispatch => {
         dispatch(IS_LOADING(true));
-        return AuthenticationService.login(username, password)
+        return AuthenticationService.login(email, password)
             .then(response => {
                 dispatch(IS_LOADING(false));
                 dispatch(LOGIN_SUCCESS(response));
@@ -78,6 +78,22 @@ export function loginWithFacebook() {
                 console.log("RESPONSE", response);
                 dispatch(IS_LOADING(false));
                 dispatch(LOGIN_WITH_FACEBOOK_SUCCESS(response));
+                return response;
+            })
+            .catch(error => {
+                dispatch(IS_LOADING(false));
+                dispatch(SET_REQUEST_ERROR(error));
+                throw new Error(error);
+            });
+    };
+}
+
+export function signUpUser(email, password, name) {
+    return dispatch => {
+        dispatch(IS_LOADING(true));
+        return AuthenticationService.signUpUser(email, password, name)
+            .then(response => {
+                dispatch(IS_LOADING(false));
                 return response;
             })
             .catch(error => {

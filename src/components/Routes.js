@@ -21,7 +21,12 @@ export default function Routes() {
             </Route>
             <LayoutRoute layout={PublicLayout} path="/login" component={Login} exact />
             <LayoutRoute layout={PublicLayout} path="/signup" component={SignUp} exact />
-            <LayoutRoute layout={MainLayoutWithAuth} path="/client/home" component={Home} exact />
+            <LayoutRoute
+                layout={MainLayoutWithAuth}
+                path="/subscriber/home"
+                component={Home}
+                exact
+            />
             <LayoutRoute
                 layout={MainLayoutWithAuth}
                 path="/admin/home"
