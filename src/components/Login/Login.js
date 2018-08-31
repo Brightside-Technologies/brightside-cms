@@ -99,45 +99,72 @@ export class Login extends React.Component {
                     textAlign="center"
                     verticalAlign="middle">
                     <Grid.Column style={{maxWidth: 450}}>
-                        <Header as="h2" color="yellow" textAlign="center">
-                            {/* <Image src="/logo.png" />  */}
+                        {/* <Header as="h2" color="yellow" textAlign="center">
+                            <Image src="/logo.png" /> 
                             Log-in to your account
-                        </Header>
-                        <Form size="large">
-                            <Segment raised>
-                                <Form.Input
-                                    onChange={ev => {
-                                        this.handleEmailChange(ev.target.value);
-                                    }}
-                                    fluid
-                                    icon="user"
-                                    iconPosition="left"
-                                    placeholder="E-mail address"
-                                />
-                                <Form.Input
-                                    onChange={ev => {
-                                        this.handlePasswordChange(ev.target.value);
-                                    }}
-                                    fluid
-                                    icon="lock"
-                                    iconPosition="left"
-                                    placeholder="Password"
-                                    type="password"
-                                />
-                                <Button
-                                    disabled={!email || !password}
-                                    loading={isLoading}
-                                    onClick={() => {
-                                        this.handleLogin(email, password);
-                                    }}
-                                    color="yellow"
-                                    fluid
-                                    size="large">
-                                    Login
-                                </Button>
-                            </Segment>
+                        </Header> */}
+                        <Form className="attached fluid segment" size="large">
+                            <Header as="h1">Brightside CMS</Header>
+                            <Header as="h3">Log in with</Header>
+                            <Button
+                                loading={isLoading}
+                                onClick={this.handleLoginWithFacebook}
+                                color="facebook">
+                                <Icon name="facebook" /> Facebook
+                            </Button>
+                            <Button
+                                loading={isLoading}
+                                onClick={this.handleLoginWithGoogle}
+                                color="google plus">
+                                <Icon name="google plus" /> Google Plus
+                            </Button>
+                            <Divider horizontal>OR</Divider>
+                            <Form.Input
+                                onChange={ev => {
+                                    this.handleEmailChange(ev.target.value);
+                                }}
+                                fluid
+                                icon="user"
+                                iconPosition="left"
+                                placeholder="E-mail address"
+                            />
+                            <Form.Input
+                                onChange={ev => {
+                                    this.handlePasswordChange(ev.target.value);
+                                }}
+                                fluid
+                                icon="lock"
+                                iconPosition="left"
+                                placeholder="Password"
+                                type="password"
+                            />
+                            <Button
+                                disabled={!email || !password}
+                                loading={isLoading}
+                                onClick={() => {
+                                    this.handleLogin(email, password);
+                                }}
+                                color="yellow"
+                                fluid
+                                size="large">
+                                Login
+                            </Button>
                         </Form>
-                        <Segment raised>
+                        {(shouldSignUp && (
+                            <Message attached="bottom" negative>
+                                Email address not found &nbsp;
+                                <a href="/signup">Sign up</a>
+                                &nbsp;instead.
+                            </Message>
+                        )) || (
+                            <Message attached="bottom" warning>
+                                <Icon name="help" />
+                                Don't have an account?&nbsp;
+                                <a href="/signup">Sign up here</a>
+                            </Message>
+                        )}
+
+                        {/* <Segment raised>
                             <Divider horizontal>OR LOG IN WITH</Divider>
                             <Button
                                 loading={isLoading}
@@ -158,7 +185,7 @@ export class Login extends React.Component {
                                     &nbsp;instead.
                                 </Message>
                             )}
-                        </Segment>
+                        </Segment> */}
                     </Grid.Column>
                 </Grid>
             </div>
