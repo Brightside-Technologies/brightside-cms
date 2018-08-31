@@ -1,9 +1,9 @@
 import {authRef} from "../firebase";
 import UsersService from "../services/users.service";
 
-function login(username, password) {
+function login(email, password) {
     return authRef()
-        .signInWithEmailAndPassword(username, password)
+        .signInWithEmailAndPassword(email, password)
         .then(response => {
             return response;
         });
@@ -56,11 +56,27 @@ function loginWithFacebook() {
         });
 }
 
+function signUpUser(newUser) {
+    const {email, password} = newUser;
+    return authRef()
+        .createUserWithEmailAndPassword(email, password)
+        .then(response => {
+            console.log("USER SIGNED UP", response);
+
+            /** TODO: userDTO has role: subscriber,  name, email, photoUrl: avatar or whatever they used to sign up with */
+            // newUser.role = "subscriber";
+            // newUser.photoUrl = newUser.photoUrl || gravatar
+            // return UsersService.create(newUser);
+            return response;
+        });
+}
+
 const AuthenticationService = {
     login,
     logout,
     loginWithGoogle,
-    loginWithFacebook
+    loginWithFacebook,
+    signUpUser
 };
 
 export default AuthenticationService;

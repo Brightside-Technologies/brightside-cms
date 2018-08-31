@@ -15,9 +15,16 @@ function _delete() {
     return authRef().currentUser.delete();
 }
 
+function create(newUser) {
+    return dbRef()
+        .collection("users")
+        .set(newUser);
+}
+
 const UsersService = {
     getByUid,
-    _delete
+    _delete,
+    create
 };
 
 export default UsersService;
