@@ -9,6 +9,7 @@ import withRoleAuthorization from "./withRoleAuthorization";
 import NotFound from "./NotFound";
 import Login from "./Login/Login";
 import SignUp from "./SignUp";
+import Welcome from "../containers/Welcome";
 import Home from "../containers/Home/Home";
 import AdminDashboard from "../containers/AdminDashbboard";
 
@@ -21,6 +22,7 @@ export default function Routes() {
             </Route>
             <LayoutRoute layout={PublicLayout} path="/login" component={Login} exact />
             <LayoutRoute layout={PublicLayout} path="/signup" component={SignUp} exact />
+            <LayoutRoute layout={MainLayoutWithAuth} path="/welcome" component={Welcome} exact />
             <LayoutRoute
                 layout={MainLayoutWithAuth}
                 path="/subscriber/home"

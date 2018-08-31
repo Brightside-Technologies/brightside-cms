@@ -17,7 +17,12 @@ const appReducer = combineReducers({
     [REQUEST_IS_LOADING]: FromRequests.isLoading
 });
 
-const rootReducer = (state, action) => appReducer(state, action);
+const rootReducer = (state, action) => {
+    if (action.type === "LOGOUT_SUCCESS") {
+        state = undefined;
+    }
+    return appReducer(state, action);
+};
 
 export default rootReducer;
 

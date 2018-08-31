@@ -27,7 +27,7 @@ export class SignUp extends React.Component {
     handleSignUpUser = (email, password, name) => {
         const {history, signUpUserAction} = this.props;
         signUpUserAction(email, password, name).then(() => {
-            //history.push()
+            history.push("/welcome");
         });
     };
 
