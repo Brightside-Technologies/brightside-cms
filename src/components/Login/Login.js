@@ -60,7 +60,8 @@ export class Login extends React.Component {
 
         loginWithFacebookAction()
             .then(response => {
-                if (response.additionalUserInfo.isNewUser) {
+                console.log("LOGIN", response);
+                if (response.isNewUser) {
                     return deleteCurrentUserAction().then(() => {
                         this.setState({shouldSignUp: true});
                         return Promise.reject("User doesn't exist");

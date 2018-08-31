@@ -31,10 +31,10 @@ class Navbar extends React.Component {
     render() {
         console.log("PROPS", this.props);
         const {activeItem} = this.state;
-        const {Name, PhotoURL} = this.props.loggedInUser;
+        const {Name, photoURL} = this.props.loggedInUser;
         const avatar = (
             <div>
-                <Image src={PhotoURL} avatar />
+                <Image src={photoURL} avatar />
                 <span>{Name}</span>
             </div>
         );

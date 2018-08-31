@@ -28,6 +28,7 @@ function loginWithGoogle() {
             if (!response) {
                 return Promise.reject("System user not found");
             }
+            console.log("currentUser", authRef().currentUser);
             return response;
         });
 }
@@ -39,8 +40,13 @@ function loginWithFacebook() {
     return authRef()
         .signInWithPopup(provider)
         .then(response => {
-            console.log("FACEBOOK", response);
-            return UsersService.getByUid(response.user.uid);
+            /** TODO: temp. this should go in signUp?? */
+            return UsersService.getByUid(response.user.uid).then(user => {
+                const {isNewUser} = response.additionalUserInfo;
+                const {photoURL} = response.user;
+                const loggedInUser = Object.assign(user, {isNewUser, photoURL});
+                return loggedInUser;
+            });
         })
         .then(response => {
             if (!response) {
